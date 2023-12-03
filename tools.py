@@ -4,6 +4,8 @@ import numpy as np
 import matplotlib.pylab as plt
 from PIL import Image
 import json
+from sklearn.model_selection import train_test_split
+from keras.preprocessing.image import ImageDataGenerator
 
 
 class BasicTools:
@@ -35,7 +37,55 @@ class IOTools(BasicTools):
         with open(fname, "w") as f:
             json.dump(obj, f, indent=2)
 
-class Tools(IOTools):
+class MLTools(BasicTools):
+    def __init__(self) -> None:
+        super().__init__()
+
+    class ImageDataFrameGenerator:
+        def __init__(self, image_directory, csv_path) -> None:
+            self.image_directory = image_directory
+            self.csv_path = csv_path
+
+        def load(self, x_col, y_col, test_size=.2, batch_size=256, target_size=(256, 256)):
+            df = pd.read_csv(self.csv_path)
+            train_df, test_df = train_test_split(
+                df,
+                test_size=test_size,
+                shuffle=True,
+                random_state=1
+            )
+
+            image_data_gen = ImageDataGenerator(
+                rescale=1/255.
+            )
+
+            train_gen = image_data_gen.flow_from_dataframe(
+                dataframe=train_df,
+                directory=self.image_directory,
+                shuffle=True,
+                seed=0,
+                x_col=x_col,
+                y_col=y_col,
+                target_size=target_size,
+                batch_size=batch_size,
+                class_mode="gray_scale",
+            )
+
+            test_gen = image_data_gen.flow_from_dataframe(
+                dataframe=test_df,
+                directory=self.image_directory,
+                shuffle=False,
+                seed=0,
+                x_col=x_col,
+                y_col=y_col,
+                target_size=target_size,
+                batch_size=batch_size,
+                class_mode="gray_scale",
+            )
+
+            return (train_gen, test_gen)
+
+class Tools(IOTools, MLTools):
     def __init__(self) -> None:
         super().__init__()
 
