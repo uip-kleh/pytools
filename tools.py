@@ -5,7 +5,16 @@ import matplotlib.pylab as plt
 from PIL import Image
 
 
-class IOTools:
+class BasicTools:
+    def __init__(self) -> None:
+        pass
+
+    def clear_plt(self):
+        plt.clear()
+        plt.cla()
+        plt.clf()
+
+class IOTools(BasicTools):
     def __init__(self) -> None:
         pass
 
@@ -19,7 +28,7 @@ class IOTools:
 
     def save_image(self, fname):
         plt.savefig(fname, transparent=True)
-
+        self.clear_plt()
 
 class Tools(IOTools):
     def __init__(self) -> None:
