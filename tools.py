@@ -9,7 +9,7 @@ class BasicTools:
     def __init__(self) -> None:
         pass
 
-    def clear_plt(self):
+    def clear_figure(self):
         plt.clear()
         plt.cla()
         plt.clf()
@@ -28,7 +28,7 @@ class IOTools(BasicTools):
 
     def save_image(self, fname):
         plt.savefig(fname, transparent=True)
-        self.clear_plt()
+        self.clear_figure()
 
 class Tools(IOTools):
     def __init__(self) -> None:
