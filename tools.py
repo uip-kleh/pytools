@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pylab as plt
 from PIL import Image
+import json
 
 
 class BasicTools:
@@ -21,7 +22,7 @@ class IOTools(BasicTools):
     def read_csv(self, fname):
         return pd.read_csv(fname)
 
-    def read_color_image(self, fname, asnumpy=False):
+    def read_image(self, fname, asnumpy=False):
         img = Image.open(fname)
         if asnumpy: return np.array(img)
         return img
@@ -29,6 +30,10 @@ class IOTools(BasicTools):
     def save_image(self, fname):
         plt.savefig(fname, transparent=True)
         self.clear_figure()
+
+    def save_object(self, obj, fname):
+        with open(fname, "w") as f:
+            json.dump(obj, f, indent=2)
 
 class Tools(IOTools):
     def __init__(self) -> None:

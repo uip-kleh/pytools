@@ -6,8 +6,20 @@
 
 ## IOTools
 - read_csv
-  - read csv as fataframe(Pandas)
-- read_color_image
   - args
-    - fname -> string: a image path
+    - fname -> string
+  - read csv as dataframe(Pandas)
+- read_image
+  - args
+    - fname -> string
     - asnumpy -> bool: read image as numpy
+  - read color image
+- save_image
+  - args
+    - fname
+  - save plt figure
+- save_object
+  - args
+    - obj -> list, dict
+    - fname -> string
+  - save list or dict
