@@ -5,8 +5,11 @@ import matplotlib.pylab as plt
 from PIL import Image
 import json
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, StratifiedKFold
+from sklearn.metrics import f1_score
 from keras.preprocessing.image import ImageDataGenerator
+from xgboost import XGBClassifier
+import pickle
 
 
 class BasicTools:
@@ -76,6 +79,20 @@ class MLTools(BasicTools):
     def __init__(self) -> None:
         super().__init__()
 
+    def microf1_eval(y_pred, dtrain):
+        y_true = dtrain.get_label()
+        y_pred = np.argmax(y_pred, axis=1)
+        err = 1-f1_score(y_true, np.round(y_pred), average="micro")
+        return 'f1_err', err
+
+    def generate_cross_index(self, df, labels):
+        index = []
+        kf = StratifiedKFold(n_splits=5, shuffle=True, random_state=1)
+        for train_idx, val_idx in kf.split(df, labels):
+            index.append((train_idx, val_idx))
+        return index
+
+    # tensorflow
     class ImageDataFrameGenerator:
         def __init__(self, image_directory, csv_path) -> None:
             self.image_directory = image_directory
@@ -119,6 +136,18 @@ class MLTools(BasicTools):
             )
 
             return (train_gen, test_gen)
+
+    # XGBoost
+    class UseXGBoost:
+
+        def generate_classifier(self):
+            return XGBClassifier(n_estimators=1000, tree_method='gpu_hist')
+
+        def save_model(self, model, fname):
+            pickle.dump(model, open(fname, "wb"))
+
+        def load_model(self, fname):
+            return pickle.load(open(fname, "rb"))
 
 class Tools(IOTools, AnalysisTools, MLTools):
     def __init__(self) -> None:
