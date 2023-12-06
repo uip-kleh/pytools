@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 import matplotlib.pylab as plt
+import seaborn as sns
 from PIL import Image
 import json
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
@@ -74,6 +75,20 @@ class AnalysisTools(BasicTools):
 
     def split_data(self, data, labels):
         return train_test_split(data, labels, stratify=labels, test_size=.2)
+
+class DrawTools(BasicTools):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def draw_confusion_matrix(self, cm, norm, fname):
+        if norm:
+            sns.heatmap(cm, annot=True, square=True, cbar=True, cmap='Blues')
+        else:
+            sns.heatmap(cm, annot=True, square=True, cbar=True, cmap='Blues', fmt='d')
+        plt.yticks(rotation=0)
+        plt.xlabel("Pre", fontsize=13, rotation=0)
+        plt.ylabel("GT", fontsize=13)
+        self.save_image(fname)
 
 class MLTools(BasicTools):
     def __init__(self) -> None:
@@ -149,7 +164,7 @@ class MLTools(BasicTools):
         def load_model(self, fname):
             return pickle.load(open(fname, "rb"))
 
-class Tools(IOTools, AnalysisTools, MLTools):
+class Tools(IOTools, AnalysisTools, DrawTools, MLTools):
     def __init__(self) -> None:
         super().__init__()
 
