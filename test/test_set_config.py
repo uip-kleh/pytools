@@ -3,7 +3,7 @@ import sys
 sys.path.append(os.pardir)
 from libs.setconfig import SetConfig
 
-class MySetConfig(SetConfig):
+class TestSetConfig(SetConfig):
     def __init__(self, fname):
         super().__init__(fname)
         self.set()
@@ -13,5 +13,5 @@ class MySetConfig(SetConfig):
 
 if __name__ == "__main__":
     fname = "config.yaml"
-    setconfig = MySetConfig(fname)
+    setconfig = TestSetConfig(fname)
     print(setconfig.test)
